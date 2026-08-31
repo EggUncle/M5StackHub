@@ -1,0 +1,33 @@
+name: Build StopWatch firmware
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node scripts/check-docs.mjs
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install platformio==6.1.18
+      - run: pio run -e stopwatch_pet
+      - name: Save application and flash metadata
+        uses: actions/upload-artifact@v4
+        with:
+          name: stopwatch-firmware
+          path: |
+            .pio/build/stopwatch_pet/firmware.bin
+            .pio/build/stopwatch_pet/bootloader.bin
+            .pio/build/stopwatch_pet/partitions.bin
+          if-no-files-found: error

@@ -1,0 +1,13 @@
+.pio/
+.venv/
+.DS_Store
+*.log
+__pycache__/
+*.py[cod]
+.env
+.env.*
+!.env.example
+backups/
+*.bin
+*.elf
+*.map
